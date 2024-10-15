@@ -9,15 +9,6 @@
             }
             echo '</ul>';
         }
-
-        if(isset($modelos)){
-            echo '<ul>';
-            foreach($modelos as $modelo){
-                echo '<li>' . $modelo->nombre . '</li>'; 
-                echo '<a href="detallesmodelo/' . $modelo->id_zapatilla . '">Ver mas</a>';
-            }
-            echo '</ul>';
-        }
     
     require './plantillas/layouts/footer.phtml'
 ?>
