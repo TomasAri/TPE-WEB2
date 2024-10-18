@@ -1,15 +1,36 @@
+<?php require './plantillas/layouts/header.phtml'; ?>
 
-<?php
-    require './plantillas/layouts/header.phtml';
 
-    if(isset($fabrica)){
-        echo '<h1>' . $fabrica->nombre . '</h1>';
-        echo '<p>Pais: ' . $fabrica->pais . '</p>';
-        echo '<p>Importador: ' . $fabrica->importador . '</p>';
-        echo '<p>Cantidad: ' . $fabrica->cantidad . '</p>';
-        echo '<a href=""/plantillas/lista_fabricas.phtml"' . '>Volver</a>';
-    }
+<div class="container mt-5">
+    <h1 class="text-center text-secondary display-6">Detalles de la Fábrica: <?= $fabrica->nombre; ?></h1>
     
-    require './plantillas/layouts/footer.phtml'
-?>
-<a href="/plantillas/lista_fabricas.phtml"></a>
+    <div class="card mb-4">
+        <div class="card-header">
+            Información de la Fábrica
+        </div>
+        <div class="card-body">
+            <p><strong>Importador:</strong> <?= $fabrica->importador; ?></p>
+            <p><strong>País:</strong> <?= $fabrica->pais; ?></p>
+            <p><strong>Cantidad:</strong> <?= $fabrica->cantidad; ?></p>
+        </div>
+    </div>
+
+    <h2>Modelos Asociados</h2>
+    <ul class="list-group">
+        <?php if (!empty($models)): ?>
+            <?php foreach ($models as $modelo): ?>
+                <li class="list-group-item">
+                    <strong><?= $modelo->nombre; ?></strong> - <strong>Precio:</strong> $<?= number_format($modelo->precio, 2); ?> - <strong>Stock:</strong> <?= $modelo->stock; ?>
+                </li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li class="list-group-item">No hay modelos asociados a esta fábrica.</li>
+        <?php endif; ?>
+    </ul>
+
+    <div class="mt-4">
+        <a href="listarfabrica" class="btn btn-primary">Volver a la lista de fábricas</a>
+    </div>
+</div>
+
+<?php require './plantillas/layouts/footer.phtml'; ?>

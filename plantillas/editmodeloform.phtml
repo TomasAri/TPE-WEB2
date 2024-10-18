@@ -1,0 +1,30 @@
+<h1>Editar Modelo</h1>
+
+<?php if ($this->user): ?>
+    <form action="<?='editModelo/' . $modelo->id_zapatilla ?>" method="post">
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre:</label>
+        <input name="nombre" type="text" class="form-control" value="<?= $modelo->nombre ?>" required>
+    </div>
+    <div class="mb-3">
+        <label for="precio" class="form-label">Precio:</label>
+        <input name="precio" type="number" class="form-control" value="<?= $modelo->precio ?>" required>
+    </div>
+    <div class="mb-3">
+        <label for="stock" class="form-label">Stock:</label>
+        <input name="stock" type="number" class="form-control" value="<?= $modelo->stock ?>" required>
+    </div>
+    <div class="mb-3">
+        <label for="id_fabrica" class="form-label">Fábrica:</label>
+        <select name="id_fabrica" class="form-control" required>
+            <option value="" disabled selected>Seleccione una fábrica</option>
+            <?php foreach ($fabricas as $fabrica): ?>
+                <option value="<?= $fabrica->id; ?>"><?= $fabrica->nombre; ?></option> <!-- Cambiado id_fabrica a id -->
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a href="<?= BASE_URL ?>">Cancelar</a>
+</form>
+<?php endif; ?>
