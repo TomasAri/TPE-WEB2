@@ -1,21 +1,27 @@
 <?php
-    require_once('./db/config.php');
-class Model {
-    protected $db;
+    require_once './db/config.php';
+    class Model {
+        protected $db;
 
-    public function __construct() {
-        $this->db = new PDO('mysql:host=localhost;dbname=venta de zapatillas;charset=utf8', 'root', '');
-        $this->_deploy();
-    } 
+        public function __construct() {
+            $this->crearDb();
+            $this->db = new PDO(
+                'mysql:host='. MYSQL_HOST .
+                ';dbname='. MYSQL_DB .
+                ';charset=utf8', MYSQL_USER, MYSQL_PASS
+            );
+            $this->deploy();
+        }
 
-    private function _deploy() {
-        $query = $this->db->query('SHOW TABLES');
-        $tables = $query->fetchAll();
-        if(count($tables) == 0) {
-            $sql = <<<END
-                Base de datos: `venta de zapatillas`
-
-                Estructura de tabla para la tabla `fabrica`
+        private function deploy(){
+            $query = $this->db->query('SHOW TABLES');
+            $tables = $query->fetchAll();
+            if(count($tables) == 0) {
+                $password = '$2y$10$1zkQ5p1OqmcGMyw6NEf7B./d.r3DSAbBEcVRO/zE1Ge1dAGLOzETG';
+                $sql =<<<END
+                --
+                -- Estructura de tabla para la tabla `fabrica`
+                --
 
                 CREATE TABLE `fabrica` (
                 `id` int(11) NOT NULL,
@@ -25,7 +31,9 @@ class Model {
                 `cantidad` int(100) NOT NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-                Volcado de datos para la tabla `fabrica`
+                --
+                -- Volcado de datos para la tabla `fabrica`
+                --
 
                 INSERT INTO `fabrica` (`id`, `nombre`, `importador`, `pais`, `cantidad`) VALUES
                 (1, 'Nike', 'Juan Luis Rodriguez', 'Estados Unidos', 50),
@@ -35,8 +43,11 @@ class Model {
                 (5, 'New Balance', 'Jhon Trump', 'Estados Unidos', 90),
                 (6, 'DC', 'Peruano', 'Puerto Rico', 5);
 
-                Estructura de tabla para la tabla `modelo`
+                -- --------------------------------------------------------
 
+                --
+                -- Estructura de tabla para la tabla `modelo`
+                --
 
                 CREATE TABLE `modelo` (
                 `id_zapatilla` int(11) NOT NULL,
@@ -46,8 +57,9 @@ class Model {
                 `stock` int(100) NOT NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-                Volcado de datos para la tabla `modelo`
-
+                --
+                -- Volcado de datos para la tabla `modelo`
+                --
 
                 INSERT INTO `modelo` (`id_zapatilla`, `id_fabrica`, `precio`, `nombre`, `stock`) VALUES
                 (1, 1, 120, 'Air Force 1 \'07 Next Nature', 5),
@@ -59,8 +71,11 @@ class Model {
                 (13, 6, 120, 'Court Graffik Ss (Xw)', 10),
                 (14, 5, 160, '530', 15);
 
-                Estructura de tabla para la tabla `usuario`
+                -- --------------------------------------------------------
 
+                --
+                -- Estructura de tabla para la tabla `usuario`
+                --
 
                 CREATE TABLE `usuario` (
                 `id` int(11) NOT NULL,
@@ -68,59 +83,80 @@ class Model {
                 `password` char(60) NOT NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-                Volcado de datos para la tabla `usuario`
-
+                --
+                -- Volcado de datos para la tabla `usuario`
+                --
 
                 INSERT INTO `usuario` (`id`, `user`, `password`) VALUES
-                (1, 'webadmin', '$2y$10$1zkQ5p1OqmcGMyw6NEf7B./d.r3DSAbBEcVRO/zE1Ge1dAGLOzETG');
+                (1, 'webadmin', '$password');
 
+                --
+                -- Índices para tablas volcadas
+                --
 
-                Índices para tablas volcadas
-
-                Indices de la tabla `fabrica`
-
+                --
+                -- Indices de la tabla `fabrica`
+                --
                 ALTER TABLE `fabrica`
                 ADD PRIMARY KEY (`id`);
 
-                Indices de la tabla `modelo`
-
+                --
+                -- Indices de la tabla `modelo`
+                --
                 ALTER TABLE `modelo`
                 ADD PRIMARY KEY (`id_zapatilla`),
                 ADD KEY `modelo_ibfk_1` (`id_fabrica`);
 
-                Indices de la tabla `usuario`
-
+                --
+                -- Indices de la tabla `usuario`
+                --
                 ALTER TABLE `usuario`
                 ADD PRIMARY KEY (`id`),
                 ADD UNIQUE KEY `email` (`user`);
 
-                AUTO_INCREMENT de las tablas volcadas
+                --
+                -- AUTO_INCREMENT de las tablas volcadas
+                --
 
-                AUTO_INCREMENT de la tabla `fabrica`
-
+                --
+                -- AUTO_INCREMENT de la tabla `fabrica`
+                --
                 ALTER TABLE `fabrica`
                 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
-                AUTO_INCREMENT de la tabla `modelo`
-
+                --
+                -- AUTO_INCREMENT de la tabla `modelo`
+                --
                 ALTER TABLE `modelo`
                 MODIFY `id_zapatilla` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
-                AUTO_INCREMENT de la tabla `usuario`
-
+                --
+                -- AUTO_INCREMENT de la tabla `usuario`
+                --
                 ALTER TABLE `usuario`
                 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
+                --
+                -- Restricciones para tablas volcadas
+                --
 
-                Restricciones para tablas volcadas
-
-                Filtros para la tabla `modelo`
-
+                --
+                -- Filtros para la tabla `modelo`
+                --
                 ALTER TABLE `modelo`
                 ADD CONSTRAINT `modelo_ibfk_1` FOREIGN KEY (`id_fabrica`) REFERENCES `fabrica` (`id`);
                 COMMIT;
-        END;
-        $this->db->query($sql);
-        } 
+                END;
+                $this->db->query($sql);
+            }
+
+        }
+
+        private function crearDb(){
+            $nombreDb = MYSQL_DB;
+            $pdo = new PDO('mysql:host =' . MYSQL_HOST.';charset = utf8', MYSQL_USER, MYSQL_PASS);
+            $query = "CREATE DATABASE IF NOT EXISTS $nombreDb";
+            $pdo->exec($query);
+        }
+
     }
-}

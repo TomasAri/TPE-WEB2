@@ -1,11 +1,9 @@
 <?php
 
-    class modelosModel{
-        private $db;
+        require_once ('./aplicacion/models/model.php');
+    
+    class modelosModel extends Model{
 
-        public function __construct(){
-            $this->db = new PDO('mysql:host=localhost;dbname=venta de zapatillas;charset=utf8', 'root', '');
-        }
         public function getModelos(){
             //Ejecuto la consulta
             $query = $this->db->prepare('SELECT * FROM modelo');

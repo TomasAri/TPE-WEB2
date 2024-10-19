@@ -1,12 +1,9 @@
 <?php
 
-    class fabricaModel{
-        private $db;
+    require_once ('./aplicacion/models/model.php');
 
-        public function __construct(){
-            $this->db = new PDO('mysql:host=localhost;dbname=venta de zapatillas;charset=utf8', 'root', '');
-        }
-
+    class fabricaModel extends Model{
+        
         public function getFabricas(){
             //Ejecuto la consulta
             $query = $this->db->prepare('SELECT * FROM fabrica');
